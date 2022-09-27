@@ -1,0 +1,64 @@
+#!/bin/bash
+
+if [[ ! "$(which gum)" ]]; then
+  echo "Please install charmbracelet/gum"
+fi
+
+create_dir() {
+  mkdir ./"$PROJECT" || echo "couldn't create directory"
+  cd "$PROJECT" && echo -e "# $PROJECT\n" > README.md
+}
+
+init_repo() {
+  vim README.md
+  wait $!
+  git init
+}
+
+confirm() {
+  PROJECT="$(gum input --placeholder "Enter Project Name")" 
+  echo "PROJECT TYPE: $1"
+  echo -e "PROJECT NAME: $PROJECT\n"
+  gum confirm "Proceed?" || exit 0
+}
+
+
+TYPE="$(gum choose \
+	"PYTHON-standard"\
+	"PYTHON-flask-basic"\
+	"WEB"\
+	"EXIT"
+	)"
+
+
+case "$TYPE" in
+  "PYTHON-standard") 
+	  confirm "$TYPE"
+  	  create_dir
+	  mkdir modules
+	  touch main.py requirements.txt
+	  init_repo
+
+	  ;;
+
+  "PYTHON-flask-basic") 
+	  confirm "$TYPE"
+	  create_dir
+	  mkdir static templates views
+	  touch ./static/style.css ./templates/index.html 
+	  touch ./app.py ./config.py ./requirements.txt
+	  init_repo
+
+	  ;;
+
+  "WEB") 
+	  confirm "$TYPE"
+	  create_dir
+	  mkdir styles
+	  touch index.html main.js
+	  init_repo
+
+	  ;;
+
+  *)    exit 0           ;;
+esac
