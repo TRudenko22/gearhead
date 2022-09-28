@@ -1,8 +1,21 @@
 #!/bin/bash
 
-if [[ ! "$(which gum)" ]]; then
+if [[ ! "$(which gum 2>/dev/null)" ]]; then
   echo "Please install charmbracelet/gum"
 fi
+
+style() {
+  gum style\
+	  --border normal\
+	  --width  40\
+	  $1
+}
+
+spacing() {
+  for i in {1..$1}; do
+    echo ""
+  done
+}
 
 create_dir() {
   mkdir ./"$PROJECT" || echo "couldn't create directory"
@@ -16,19 +29,37 @@ init_repo() {
 }
 
 confirm() {
-  PROJECT="$(gum input --placeholder "Enter Project Name")" 
-  echo "PROJECT TYPE: $1"
-  echo -e "PROJECT NAME: $PROJECT\n"
-  gum confirm "Proceed?" || exit 0
+  spacing 3
+  PROJECT="$(gum input --placeholder "Enter Project name")" 
+
+  if [[ -z "$PROJECT" ]]; then
+    echo "Please provide a project name"
+    exit 2
+  fi
+  
+  spacing 3
+  echo -e "PROJECT-TYPE:  $TYPE\n"
+  echo -e "PROJECT-NAME:  $PROJECT\n"
+
+  gum confirm "Continue ?" || exit 0
 }
 
 
-TYPE="$(gum choose \
-	"PYTHON-standard"\
-	"PYTHON-flask-basic"\
-	"WEB"\
-	"EXIT"
-	)"
+
+
+gum style\
+	  --border double\
+	  --margin "1 2"\
+	  --padding "1 2"\
+	  "⚙ GEARHEAD "
+
+spacing 3
+TYPE="$(gum choose\
+	  "PYTHON-standard"\
+	  "PYTHON-flask-basic"\
+	  "WEB"\
+	  "EXIT"
+	  )"
 
 
 case "$TYPE" in
@@ -36,7 +67,7 @@ case "$TYPE" in
 	  confirm "$TYPE"
   	  create_dir
 	  mkdir modules
-	  touch main.py requirements.txt
+	  touch main.py 
 	  init_repo
 
 	  ;;
@@ -62,3 +93,5 @@ case "$TYPE" in
 
   *)    exit 0           ;;
 esac
+
+
