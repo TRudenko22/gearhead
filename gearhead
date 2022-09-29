@@ -1,16 +1,6 @@
 #!/bin/bash
 
-if [[ ! "$(which gum 2>/dev/null)" ]]; then
-  echo "Please install charmbracelet/gum"
-fi
-
-style() {
-  gum style\
-	  --border normal\
-	  --width  40\
-	  $1
-}
-
+# Functions
 spacing() {
   for i in {1..$1}; do
     echo ""
@@ -18,6 +8,17 @@ spacing() {
 }
 
 create_dir() {
+  TYPE=$1
+  PROJECT=$2 
+
+  if [[ -z "$PROJECT" ]]; then
+    echo "Please provide a project name"
+    exit 2
+  fi
+  
+  echo -e "PROJECT-TYPE:  $TYPE\n"
+  echo -e "PROJECT-NAME:  $PROJECT\n"
+
   mkdir ./"$PROJECT" || echo "couldn't create directory"
   cd "$PROJECT" && echo -e "# $PROJECT\n" > README.md
 }
@@ -28,53 +29,21 @@ init_repo() {
   git init
 }
 
-confirm() {
-  spacing 3
-  PROJECT="$(gum input --placeholder "Enter Project name")" 
-
-  if [[ -z "$PROJECT" ]]; then
-    echo "Please provide a project name"
-    exit 2
-  fi
-  
-  spacing 3
-  echo -e "PROJECT-TYPE:  $TYPE\n"
-  echo -e "PROJECT-NAME:  $PROJECT\n"
-
-  gum confirm "Continue ?" || exit 0
-}
-
-
-
-
-gum style\
-	  --border double\
-	  --margin "1 2"\
-	  --padding "1 2"\
-	  "⚙ GEARHEAD "
-
-spacing 3
-TYPE="$(gum choose\
-	  "PYTHON-standard"\
-	  "PYTHON-flask-basic"\
-	  "WEB"\
-	  "EXIT"
-	  )"
-
+# Main Script
+TYPE=$1
+NAME=$2
 
 case "$TYPE" in
-  "PYTHON-standard") 
-	  confirm "$TYPE"
-  	  create_dir
+  "py-standard") 
+  	  create_dir "$TYPE" "$NAME"
 	  mkdir modules
 	  touch main.py 
 	  init_repo
 
 	  ;;
 
-  "PYTHON-flask-basic") 
-	  confirm "$TYPE"
-	  create_dir
+  "py-flask") 
+	  create_dir "$TYPE" "$NAME"
 	  mkdir static templates views
 	  touch ./static/style.css ./templates/index.html 
 	  touch ./app.py ./config.py ./requirements.txt
@@ -82,9 +51,8 @@ case "$TYPE" in
 
 	  ;;
 
-  "WEB") 
-	  confirm "$TYPE"
-	  create_dir
+  "web") 
+	  create_dir "$TYPE" "$NAME"
 	  mkdir styles
 	  touch index.html main.js
 	  init_repo
