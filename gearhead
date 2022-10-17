@@ -29,13 +29,16 @@ init_repo() {
   git init
 }
 
+
+
+
 # Main Script
 TYPE=$1
 NAME=$2
 
 case "$TYPE" in
   "py-standard") 
-  	  create_dir "$TYPE" "$NAME"
+  	create_dir "$TYPE" "$NAME"
 	  mkdir modules
 	  touch main.py 
 	  init_repo
@@ -51,13 +54,13 @@ case "$TYPE" in
 
 	  ;;
 
-  "web") 
+  "go")
 	  create_dir "$TYPE" "$NAME"
-	  mkdir styles
-	  touch index.html main.js
+	  touch main.go
+	  go mod init "$NAME"
 	  init_repo
 
-	  ;;
+    ;;
 
   *)    exit 0           ;;
 esac
