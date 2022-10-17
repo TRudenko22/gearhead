@@ -1,11 +1,6 @@
 #!/bin/bash
 
 # Functions
-spacing() {
-  for i in {1..$1}; do
-    echo ""
-  done
-}
 
 create_dir() {
   TYPE=$1
@@ -28,7 +23,6 @@ init_repo() {
   wait $!
   git init
 }
-
 
 
 
@@ -62,7 +56,9 @@ case "$TYPE" in
 
     ;;
 
-  *)    exit 0           ;;
+  *)    exit 0
+
+    ;;
 esac
 
 
